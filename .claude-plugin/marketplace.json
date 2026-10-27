@@ -1,0 +1,11 @@
+{
+  "name": "claude-agent-workflows",
+  "owner": { "name": "techpowerdev" },
+  "metadata": {
+    "description": "Reusable Claude Code workflows for multi-agent software delivery.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    { "name": "agent-team-delivery", "source": "./plugins/agent-team-delivery" }
+  ]
+}

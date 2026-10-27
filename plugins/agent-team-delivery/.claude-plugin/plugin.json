@@ -1,0 +1,8 @@
+{
+  "name": "agent-team-delivery",
+  "description": "Orchestrator workflow for shipping software with a team of Claude subagents (planner / builder / qa / reviewer): spec-driven, TDD, one task per PR, independent review and QA, merge one-by-one behind CI, evidence per task, protected main/develop branching.",
+  "version": "0.1.0",
+  "author": { "name": "techpowerdev" },
+  "repository": "https://github.com/techpowerdev/claude-agent-workflows",
+  "keywords": ["orchestration", "subagents", "tdd", "code-review", "qa", "git-flow", "workflow"]
+}
