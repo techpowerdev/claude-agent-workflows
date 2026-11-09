@@ -12,9 +12,14 @@ cd "$REPO" || exit 1
 is_docs_only(){ local f; while read -r f; do [ -z "$f" ] && continue
   case "$f" in docs/*|*.md) ;; *) return 1;; esac; done; return 0; }
 
-wait_pr(){ sleep 40; for i in $(seq 1 120); do
-    c=$(gh pr checks "$1" 2>/dev/null | awk '{print $2}' | grep -c -E 'pending|queued'); [ "$c" -eq 0 ] && break; sleep 30; done
-  ! gh pr checks "$1" 2>/dev/null | awk '{print $2}' | grep -qE 'fail|cancel'; }
+wait_pr(){ sleep 40; local i out
+  for i in $(seq 1 120); do
+    out=$(gh pr checks "$1" 2>/dev/null)
+    # ผลว่าง = ยังไม่มี check หรือ gh เน็ตหลุด ต้องรอต่อ ห้ามนับเป็นผ่าน; ชื่อ job มีช่องว่างได้ จึงแยกคอลัมน์ด้วย tab
+    if [ -n "$out" ] && ! printf '%s\n' "$out" | awk -F'\t' '{print $2}' | grep -qE 'pending|queued'; then
+      ! printf '%s\n' "$out" | awk -F'\t' '{print $2}' | grep -qE 'fail|cancel'; return; fi
+    sleep 30; done
+  echo "timeout รอ CI ของ #$1"; return 1; }
 
 merge(){ local m; for i in $(seq 1 15); do m=$(gh pr view "$1" --json mergeable -q .mergeable 2>/dev/null)
     case "$m" in MERGEABLE|CONFLICTING) break;; esac; sleep 10; done
